@@ -54,6 +54,25 @@ coach.example.org {
 }
 ```
 
+### 共享主机上的独立 Tailscale 服务
+
+在[官方 Linux 静态包](https://pkgs.tailscale.com/stable/)下载对应架构的压缩包，核对同一下载地址加 `.sha256` 提供的校验和。把其中的 `tailscale` 和 `tailscaled` 安装到 `/var/lib/road-cycling-coach/tailnet/bin`，目录与文件归专用用户 `road-cycling`，权限设为 `0700`。以下命令创建用户态服务和独立状态文件，服务器保留现有系统路由。
+
+```bash
+sudo install -m 644 deploy/road-cycling-tailnet.service /etc/systemd/system/
+sudo systemctl daemon-reload
+sudo systemctl enable --now road-cycling-tailnet.service
+coachtail() {
+  sudo -u road-cycling -H /var/lib/road-cycling-coach/tailnet/bin/tailscale \
+    --socket=/run/road-cycling-tailnet/tailscaled.sock "$@"
+}
+coachtail up --hostname=road-cycling-coach --accept-dns=false --accept-routes=false
+coachtail serve --bg http://127.0.0.1:18797
+coachtail serve status
+```
+
+用自己的 Tailscale 账号批准服务器设备，按提示开启 HTTPS。以后以同一台设备的 `serve status` 核对私有地址。保持服务器注册有效，必要时在 Tailscale 后台为该服务器管理节点密钥到期。网站密码、Tailscale 状态文件和实际访问地址留在部署环境。 [用户态网络模式](https://tailscale.com/docs/concepts/userspace-networking) · [设备密钥到期](https://tailscale.com/kb/1028/key-expiry)
+
 停用网站可执行 `sudo systemctl disable --now road-cycling-web`。备份前停止教练的所有写入服务。备份与恢复仍使用相同的 SQLite 文件和选定的教练 Profile。
 
 ## 双向对话
