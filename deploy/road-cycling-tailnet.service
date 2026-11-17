@@ -9,7 +9,7 @@ User=road-cycling
 Group=road-cycling
 RuntimeDirectory=road-cycling-tailnet
 RuntimeDirectoryMode=0700
-ExecStart=/var/lib/road-cycling-coach/tailnet/bin/tailscaled --tun=userspace-networking --port=0 --state=/var/lib/road-cycling-coach/tailnet/state --socket=/run/road-cycling-tailnet/tailscaled.sock
+ExecStart=/var/lib/road-cycling-coach/tailnet/bin/tailscaled --tun=userspace-networking --port=0 --statedir=/var/lib/road-cycling-coach/tailnet --state=/var/lib/road-cycling-coach/tailnet/state --socket=/run/road-cycling-tailnet/tailscaled.sock
 Restart=on-failure
 RestartSec=5s
 UMask=0077

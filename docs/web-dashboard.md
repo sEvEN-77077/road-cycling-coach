@@ -56,7 +56,7 @@ coach.example.org {
 
 ### 共享主机上的独立 Tailscale 服务
 
-在[官方 Linux 静态包](https://pkgs.tailscale.com/stable/)下载对应架构的压缩包，核对同一下载地址加 `.sha256` 提供的校验和。把其中的 `tailscale` 和 `tailscaled` 安装到 `/var/lib/road-cycling-coach/tailnet/bin`，目录与文件归专用用户 `road-cycling`，权限设为 `0700`。以下命令创建用户态服务和独立状态文件，服务器保留现有系统路由。
+在[官方 Linux 静态包](https://pkgs.tailscale.com/stable/)下载对应架构的压缩包，核对同一下载地址加 `.sha256` 提供的校验和。把其中的 `tailscale` 和 `tailscaled` 安装到 `/var/lib/road-cycling-coach/tailnet/bin`，目录与文件归专用用户 `road-cycling`，权限设为 `0700`。以下命令创建用户态服务和独立状态文件，服务器保留现有系统路由。服务把 `--statedir` 指向专用目录，为 HTTPS 提供证书存储。 [Tailscale 证书目录要求](https://github.com/tailscale/tailscale/issues/5411)
 
 ```bash
 sudo install -m 644 deploy/road-cycling-tailnet.service /etc/systemd/system/
