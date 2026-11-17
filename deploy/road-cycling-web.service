@@ -1,0 +1,17 @@
+[Unit]
+Description=Private road cycling coaching dashboard
+
+[Service]
+Type=simple
+User=road-cycling
+Group=road-cycling
+WorkingDirectory=/srv/road-cycling-coach
+Environment=PATH=/var/lib/road-cycling-coach/node/bin:/usr/local/bin:/usr/bin:/bin
+ExecStart=/usr/bin/env node --env-file=.env src/web.mjs
+Restart=on-failure
+RestartSec=5s
+UMask=0077
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

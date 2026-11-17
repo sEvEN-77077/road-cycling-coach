@@ -1,0 +1,20 @@
+[Unit]
+Description=Road cycling coach OpenClaw Gateway
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+Type=simple
+User=road-cycling
+Group=road-cycling
+WorkingDirectory=/srv/road-cycling-coach
+Environment=PATH=/usr/local/bin:/usr/bin:/bin
+ExecStart=/bin/bash /srv/road-cycling-coach/deploy/openclaw.sh gateway run
+Restart=on-failure
+RestartSec=5s
+TimeoutStopSec=35s
+UMask=0077
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

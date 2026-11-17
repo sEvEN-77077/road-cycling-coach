@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>公路车教练 · 训练台</title>
+  <link rel="stylesheet" href="/site.css">
+  <script type="module" src="/site.js"></script>
+</head>
+<body>
+  <aside class="rail">
+    <a class="brand" href="#overview"><span class="mark" aria-hidden="true">↗</span><span>公路车教练<small>训练台</small></span></a>
+    <nav aria-label="训练台">
+      <a href="#overview"><span aria-hidden="true">◫</span>训练总览</a>
+      <a href="#training"><span aria-hidden="true">▦</span>训练计划</a>
+      <a href="#activities"><span aria-hidden="true">≋</span>骑行记录</a>
+      <a href="#coach"><span aria-hidden="true">◌</span>教练对话</a>
+      <a href="#data"><span aria-hidden="true">↥</span>同步与导入</a>
+    </nav>
+    <div class="rail-footer"><span class="signal"></span><span id="mode">自托管训练台</span></div>
+  </aside>
+  <main id="overview">
+    <header class="top">
+      <div><p id="today-date" class="date"></p><h1>训练总览</h1><p id="goal" class="muted">正在读取骑手档案…</p></div>
+      <a class="button primary" href="#data">↥ 同步数据</a>
+    </header>
+    <p id="global-status" role="status"></p>
+    <section id="metrics" aria-label="近七天指标" class="metrics"></section>
+    <div class="dashboard">
+      <div class="stack">
+        <section class="panel" aria-labelledby="trend-title">
+          <div class="panel-head"><div><h2 id="trend-title">骑行与恢复趋势</h2><p id="trend-caption" class="muted"></p></div><label class="compact">时间范围<select id="range"><option value="7">7 天</option><option value="30">30 天</option><option value="90" selected>90 天</option></select></label></div>
+          <div id="chart-tabs" class="tabs" aria-label="图表指标">
+            <button type="button" data-metric="minutes" aria-pressed="true">骑行时长</button><button type="button" data-metric="distance" aria-pressed="false">距离</button><button type="button" data-metric="ascent" aria-pressed="false">爬升</button><button type="button" data-metric="fatigue" aria-pressed="false">疲劳</button><button type="button" data-metric="sleep" aria-pressed="false">睡眠</button><button type="button" data-metric="rpe" aria-pressed="false">RPE</button>
+          </div>
+          <div class="chart-wrap"><canvas id="trend" height="236" role="img" aria-label="每日训练趋势"></canvas></div>
+          <p id="chart-value" class="chart-value muted"></p>
+          <details class="chart-data"><summary>查看图表数值</summary><div id="chart-data"></div></details>
+        </section>
+        <section class="panel" id="training">
+          <div class="panel-head"><div><h2>训练计划</h2><p class="muted">本周与下周 · 点击日期查看课程</p></div><button id="week-toggle" class="button secondary" type="button">下周 →</button></div>
+          <div class="calendar" id="calendar"></div>
+          <div id="day-course" class="course"></div>
+        </section>
+        <section class="panel" id="activities">
+          <div class="panel-head"><div><h2>近期骑行</h2><p class="muted">按日期汇总导入活动与手动记录</p></div></div>
+          <div class="table-wrap"><table><thead><tr><th>日期</th><th>来源</th><th>时间</th><th>距离</th><th>均功率</th><th>标准化功率</th><th>均心率</th><th>RPE</th></tr></thead><tbody id="activity-rows"></tbody></table></div>
+          <div id="power" class="power"></div>
+        </section>
+      </div>
+      <div class="stack side">
+        <section class="panel chat-panel" id="coach">
+          <div class="panel-head"><div class="coach-head"><span class="avatar" aria-hidden="true">↗</span><div><h2>教练对话</h2><p id="channel" class="muted">正在读取连接状态</p></div></div></div>
+          <div id="thread" class="thread" role="log" aria-label="教练对话历史"></div>
+          <div class="quick" id="quick"><button type="button">今天骑什么</button><button type="button">这周怎么练</button><button type="button">档案</button></div>
+          <form class="chat-form" id="chat-form"><label class="sr" for="message">消息</label><textarea id="message" placeholder="例如：今天只能骑 45 分钟" maxlength="1000" rows="2" required></textarea><button class="button primary" type="submit">发送</button></form>
+          <p id="chat-status" class="muted status" role="status"></p>
+        </section>
+        <section class="panel" id="wellness">
+          <div class="panel-head"><div><h2>恢复记录</h2><p class="muted">今日填写会用于教练调课</p></div></div>
+          <form id="wellness-form">
+            <div class="fields"><label>睡眠（小时）<input name="sleep" type="number" min="0" max="24" step="0.1" placeholder="—"></label><label>腿部疲劳（0–10）<input name="fatigue" type="number" min="0" max="10" step="1" placeholder="—"></label></div>
+            <button class="button secondary full" type="submit">更新恢复记录</button>
+          </form>
+          <p id="wellness-status" class="muted status" role="status"></p>
+        </section>
+        <section class="panel" id="data">
+          <div class="panel-head"><div><h2>同步与导入</h2><p class="muted">导入的数据会同步到教练的骑手档案</p></div></div>
+          <form id="sync-form" class="source">
+            <label>Intervals.icu 同步范围<select name="days"><option value="7">最近 7 天</option><option value="30" selected>最近 30 天</option><option value="90">最近 90 天</option></select></label>
+            <button class="button secondary full" type="submit">同步 API 活动</button><p id="sync-note" class="muted"></p>
+          </form>
+          <form id="file-form" class="source"><label>导入活动 CSV 或 FIT<input name="file" type="file" accept=".fit,.csv" required></label><p class="muted">选择文件后自动识别。Intervals.icu 活动 CSV 和原始 FIT 会直接导入，重复记录会跳过。</p>
+            <div id="power-fields" hidden><label>功率曲线日期<input name="date" type="date"></label><label class="check"><input name="test" type="checkbox">20 分钟极限测试</label></div>
+            <button class="button secondary full" type="submit" hidden>导入功率曲线</button>
+          </form>
+          <p class="muted">如果活动来自 Strava，请在 Intervals.icu 批量导出活动 CSV，再选一次文件。API 不会提供这类活动的详细数据。</p>
+          <p id="import-status" role="status" class="status"></p>
+        </section>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

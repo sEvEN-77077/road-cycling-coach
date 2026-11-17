@@ -1,0 +1,20 @@
+[Unit]
+Description=Road cycling coach reminder scheduler
+Requires=road-cycling-hermes.service
+After=road-cycling-hermes.service
+PartOf=road-cycling-hermes.service
+
+[Service]
+Type=simple
+User=road-cycling
+Group=road-cycling
+WorkingDirectory=/srv/road-cycling-coach
+ExecStart=/bin/bash /srv/road-cycling-coach/deploy/hermes-coach.sh schedule
+Restart=on-failure
+RestartSec=5s
+TimeoutStopSec=20s
+UMask=0077
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target

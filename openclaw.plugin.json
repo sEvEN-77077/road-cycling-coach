@@ -1,0 +1,7 @@
+{
+  "id": "road-cycling-coach",
+  "name": "Road Cycling Coach",
+  "description": "Deterministic coaching and reminders for an isolated personal Weixin binding.",
+  "activation": { "onStartup": true },
+  "configSchema": { "type": "object", "additionalProperties": false }
+}

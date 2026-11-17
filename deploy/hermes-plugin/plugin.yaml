@@ -1,0 +1,5 @@
+name: road-cycling-coach
+version: "0.1.0"
+description: Dispatches authorized Weixin messages to local cycling rules.
+provides_hooks:
+  - post_gateway_admission
